@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://assets/Environment/MagicCliffs/tileset.png" type="Texture" id=1]
+[ext_resource path="res://scenes/level/MovingPlatform.gd" type="Script" id=2]
+
+[sub_resource type="AtlasTexture" id=1]
+flags = 4
+atlas = ExtResource( 1 )
+region = Rect2( 600, 56, 48, 32 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 24, 14.3004 )
+
+[node name="MovingPlatform" type="StaticBody2D"]
+script = ExtResource( 2 )
+
+[node name="tileset" type="Sprite" parent="."]
+texture = SubResource( 1 )
+region_rect = Rect2( 598.685, 49.0464, 50.2958, 36.3677 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 2 )
