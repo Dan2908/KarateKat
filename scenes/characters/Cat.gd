@@ -26,7 +26,6 @@ const WALKING    = WALK_RIGHT | WALK_LEFT
 const JUMPING	 = JUMP | JUMPED
 
 var catStatus: int = 0
-# damange coolDown to check
 
 func UpdateCatStatus():
 	ActionTracker.Update()
