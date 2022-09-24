@@ -26,6 +26,7 @@ const WALKING    = WALK_RIGHT | WALK_LEFT
 const JUMPING	 = JUMP | JUMPED
 
 var catStatus: int = 0
+# damange coolDown to check
 
 func UpdateCatStatus():
 	ActionTracker.Update()
@@ -42,6 +43,7 @@ func UpdateCatStatus():
 
 func Respawn():
 	translate(_respawn_pos - transform.get_origin())
+	animation.Respawn()
 
 func SetRespawnPos(pNewPos: Vector2):
 	_respawn_pos = pNewPos
@@ -49,6 +51,7 @@ func SetRespawnPos(pNewPos: Vector2):
 #===========
 func _ready():
 	_respawn_pos = _initial_pos
+	Respawn()
 
 func _physics_process(delta):
 	UpdateCatStatus()
@@ -68,3 +71,12 @@ func _physics_process(delta):
 
 	move_and_slide(_velocity_vector, Vector2.UP)
 	animation.Update()
+
+# TODO: Signal Hub
+signal enemyHit(body)
+
+# Detect enemies within this area in the Cat to avoid monitoring each enemy
+func _on_Detector_body_entered(body):
+	if(body.is_in_group("enemies")):
+		emit_signal("enemyHit", body)
+		animation.TakeDamange()
