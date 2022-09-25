@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 ActionTracker="*res://ActionTracker.gd"
+EnemyType="res://EnemyType.gd"
 
 [display]
 
