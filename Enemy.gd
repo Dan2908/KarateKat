@@ -6,17 +6,17 @@ extends KinematicBody2D
 #*********************************
 # Variables
 #*********************************
-export var enemyType: int = 0
-
 var _dmgPoints:int setget SetDmgPoints, GetDmgPoints
 var _health:int setget SetHealth, GetHealth
 var _scoreValue:int setget SetScoreValue, GetScoreValue
-
+# Positioning
+var _initialPosition:Vector2
+var _currentPos:Vector2 = Vector2.ZERO
 #*********************************
 # Functions
 #*********************************
 # Enemy movement, must override for each type
-func Move():
+func Move(pDelta):
 	pass
 
 #*********************************
@@ -40,3 +40,9 @@ func SetScoreValue(pPoints: int):
 
 func GetScoreValue():
 	return _scoreValue
+
+#*********************************
+# Private
+#*********************************
+func _physics_process(delta):
+	Move(delta)

@@ -29,7 +29,7 @@ func _on_Respawn_body_entered(body):
 
 # Enemy hit
 func _on_Cat_enemyHit(body):
-	levelStats.TakeDamange(body.damange)	# TODO: Enemy may be a class
+	levelStats.TakeDamange(body.GetDmgPoints())	# TODO: Enemy may be a class
 
 # Cat health is over
 func _on_LevelStats_zeroHealth():

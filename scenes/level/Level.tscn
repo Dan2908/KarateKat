@@ -11,7 +11,7 @@
 [ext_resource path="res://assets/Environment/jungle/plx-4.png" type="Texture" id=9]
 [ext_resource path="res://assets/Environment/jungle/plx-5.png" type="Texture" id=10]
 [ext_resource path="res://scenes/UI/LevelStats.tscn" type="PackedScene" id=11]
-[ext_resource path="res://scenes/characters/Ghost.tscn" type="PackedScene" id=12]
+[ext_resource path="res://scenes/characters/Ghost.tscn" type="PackedScene" id=13]
 
 [sub_resource type="TileSet" id=1]
 0/name = "jungle tileset.png 0"
@@ -227,9 +227,21 @@ texture = ExtResource( 10 )
 
 [node name="Ghost" parent="." groups=[
 "enemies",
-] instance=ExtResource( 12 )]
-position = Vector2( 128, -128 )
-collision_mask = 0
+] instance=ExtResource( 13 )]
+position = Vector2( 180.312, -129.401 )
+speed = 50
+
+[node name="Ghost2" parent="." groups=[
+"enemies",
+] instance=ExtResource( 13 )]
+position = Vector2( 466.933, -132.12 )
+speed = 50
+
+[node name="Ghost3" parent="." groups=[
+"enemies",
+] instance=ExtResource( 13 )]
+position = Vector2( 1260.53, -175.587 )
+speed = 50
 
 [connection signal="enemyHit" from="Cat" to="." method="_on_Cat_enemyHit"]
 [connection signal="body_entered" from="DeadLine" to="." method="_on_DeadLine_body_entered"]
