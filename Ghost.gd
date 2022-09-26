@@ -1,29 +1,25 @@
-extends KinematicBody2D
+# Scene Ghost
+# Author: Danilo Brandolin
+#	Description: Enermy type ghost. This one floats around in a limited range and 
+# attacks by passing over the player.
+extends "res://Enemy.gd"
 
-onready var animatedSprite = $AnimatedSprite
+onready var _sprite = $AnimatedSprite
 
-export var damange: int = 10
-export var speed = 60
-export var moveRange: = 100
-
-var _stepCount = 0
-var direction: bool
-
-func Move(pDelta):
-	_stepCount += abs(speed)
-	if(_stepCount > moveRange/pDelta):
-		_stepCount = 0
-		speed *= -1
-		direction = !direction
-		animatedSprite.set_flip_h(direction)
-
-	move_and_slide(Vector2(speed, 0), Vector2.UP)
+export var movingRadius:int = 60
+export var speed:int = 40
 
 func _ready():
-	if(speed > 0):
-		direction = false
-	else:
-		direction = true
+	SetDmgPoints(15)
+	SetHealth(10)
+	SetScoreValue(100)
 
-func _physics_process(delta):
-	Move(delta)
+func Move(pDelta):
+	if(abs(_currentPos.x) > movingRadius):
+		speed *= -1	# Change sense
+		if(speed < 0):
+			_sprite.set_flip_h(true)
+		else:
+			_sprite.set_flip_h(false)
+	move_and_slide(Vector2(speed, 0))
+	_currentPos.x += speed * pDelta

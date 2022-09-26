@@ -9,11 +9,16 @@ onready var cat = get_parent()
 #===================================
 #	Variables
 #===================================
-const IDLE       = "idle"
-const JUMP_START = "jump_start"
-const JUMP_LOOP  = "jump_loop"
-const JUMP_END   = "jump_end"
-const WALK       = "walk"
+const IDLE         = "idle"
+const JUMP_START   = "jump_start"
+const JUMP_LOOP    = "jump_loop"
+const JUMP_END     = "jump_end"
+const KICK_HIGH    = "kick_high"
+const KICK_MIDDLE  = "kick_middle"
+const KICK_LOW     = "kick_low"
+const KICK_JUMPING = "kick_jumping"
+const PUNCH        = "punch"
+const WALK         = "walk"
 
 const _DEFAULTCOLOR = Color.white
 const _DAMANGECOLOR = Color.red
@@ -24,11 +29,12 @@ export var blinkFrequency: int = 10
 export var maxBlinkTime: int = 100
 
 var _blinkTimeCount:int = 0
-var _currentBlinkColor: Color = _DEFAULTCOLOR
+var _currentBlinkColor:Color = _DEFAULTCOLOR
+var _animationOnCourse:bool = false	#animations that must be finished before change
 
 # Fetch animation durations to check finite animations finished
 var duration: Dictionary
-var animationCheckPriority: Array = [ '_Idle', '_Jump', '_Walk' ]
+var animationCheckPriority: Array = [ '_Punch', '_Kick', '_Idle', '_Jump', '_Walk' ]
 
 #===================================
 #	Functions
@@ -42,8 +48,10 @@ func Respawn():
 func Update():
 	_CheckFacingSide(cat.catStatus)
 
-	# whenever an animation is required, it is set before another animation overrides it
-	# in order of priority
+	if(_animationOnCourse):
+		if(duration[animation] == frame):
+			_animationOnCourse = false
+
 	for check in animationCheckPriority:
 		if(call(check)):
 			break
@@ -64,20 +72,46 @@ func _Walk():
 	return result
 
 func _Idle():
-	var result = cat.catStatus == cat.IDLE
-	if(result):
+	if(_animationOnCourse): 
+		return false
+	if(cat.catStatus == cat.IDLE):
 		play("idle") 
-	return result
+		return true
+	return false
 
 func _Jump():
-	var result = cat.catStatus & cat.JUMPING
-	if(result):
-		if(cat.catStatus & cat.JUMP):
-			play(JUMP_START)
-		elif(cat.catStatus & cat.JUMPED):
-			if(duration[animation] == frame && animation == JUMP_START):
-				play(JUMP_LOOP)
-	return result
+	if(_animationOnCourse): 
+		return false
+	if(cat.catStatus & cat.JUMP):
+		play(JUMP_START)
+		_animationOnCourse = true
+	elif(cat.catStatus & cat.JUMPED):
+		play(JUMP_LOOP)
+	else:
+		return false
+	return true
+
+func _Kick():
+	if(cat.catStatus & cat.KICK):
+		if(cat.catStatus & cat.JUMPED):
+			play(KICK_JUMPING)
+		elif(cat.catStatus & cat.PRESSING_UP):
+			play(KICK_HIGH)
+		elif(cat.catStatus & cat.PRESSING_DOWN):
+			play(KICK_LOW)
+		else:
+			play(KICK_MIDDLE)
+		_animationOnCourse = true
+		frame = 0
+		return true
+	return false
+
+func _Punch():
+	if(cat.catStatus & cat.PUNCH):
+		play(PUNCH)
+		_animationOnCourse = true
+		return true
+	return false
 
 # Blinks if the _currentBlinkColor is other than default.
 # _currentBlinkColor are used both as blink color and as flag to control the blink 

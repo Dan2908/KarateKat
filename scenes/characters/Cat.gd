@@ -11,19 +11,22 @@ var _velocity_vector: Vector2 = Vector2(0, mass)
 var _respawn_pos: Vector2
 #===========
 # status track for motion
-const IDLE       = 0x0000
-const ONFLOOR    = 0x0001
-const WALK_RIGHT = 0x0002
-const WALK_LEFT  = 0x0004
-const JUMP       = 0x0008
-const JUMPED     = 0x0010
-const FLY_RIGHT  = 0x0020
-const FLY_LEFT   = 0x0040
+const IDLE          = 0x0000
+const ONFLOOR       = 0x0001
+const WALK_RIGHT    = 0x0002
+const WALK_LEFT     = 0x0004
+const JUMP          = 0x0008
+const JUMPED        = 0x0010
+const FLY_RIGHT     = 0x0020
+const FLY_LEFT      = 0x0040
+const KICK          = 0x0080
+const PRESSING_UP   = 0x0100
+const PRESSING_DOWN = 0x0200
+const PUNCH         = 0x0400
 
 const GO_RIGHT   = WALK_RIGHT | FLY_RIGHT
 const GO_LEFT    = WALK_LEFT | FLY_LEFT
 const WALKING    = WALK_RIGHT | WALK_LEFT
-const JUMPING	 = JUMP | JUMPED
 
 var catStatus: int = 0
 
@@ -31,8 +34,13 @@ func UpdateCatStatus():
 	ActionTracker.Update()
 	catStatus = IDLE
 
+	catStatus |= ActionTracker.GetFlag(ActionTracker.UP) * PRESSING_UP
+	catStatus |= ActionTracker.GetFlag(ActionTracker.DOWN) * PRESSING_DOWN
+	catStatus |= ActionTracker.GetFlag(ActionTracker.KICK_JUST) * KICK
+
 	if(is_on_floor()):
-		catStatus |= ActionTracker.GetFlag(ActionTracker.UP_JUST) * JUMP
+		catStatus |= ActionTracker.GetFlag(ActionTracker.PUNCH_JUST) * PUNCH
+		catStatus |= ActionTracker.GetFlag(ActionTracker.JUMP_JUST) * JUMP
 		catStatus |= ActionTracker.GetFlag(ActionTracker.RIGHT) * WALK_RIGHT
 		catStatus |= ActionTracker.GetFlag(ActionTracker.LEFT) * WALK_LEFT
 	else:
