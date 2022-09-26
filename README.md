@@ -1,3 +1,9 @@
+# Controls:
+- Move: WASD or arrows
+- Jump: Space
+- Kick: K (pressing W or S makes it kick up or down)
+- Punch: L
+
 # KarateKat
  Curso de desarrollo de videojuegos
  
